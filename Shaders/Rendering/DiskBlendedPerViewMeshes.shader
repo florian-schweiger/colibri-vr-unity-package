@@ -24,6 +24,7 @@ Shader "COLIBRIVR/Rendering/DiskBlendedPerViewMeshes"
         _StoredColorTexture ("Stored color texture", 2D) = "white" {}
         _StoredDepthTexture ("Stored depth texture", 2D) = "white" {}
         _ExcludedSourceView ("Excluded source camera index", int) = -1
+        _ConcentricMosaic ("Dataset is concentric mosaic", int) = 0
         [PerRendererData] _SourceCamIndex ("Source camera index", int) = 0
         [PerRendererData] _SourceCamPosXYZ ("Source camera position", Vector) = (0, 0, 0)
         [PerRendererData] _SourceCamIsOmnidirectional ("Source camera is omnidirectional", int) = 0

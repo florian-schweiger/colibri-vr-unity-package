@@ -32,9 +32,11 @@
     uniform float _FocalLength;
     uniform uint _IsColorSourceCamIndices;
     uniform int _ExcludedSourceView;
+    uniform int _ConcentricMosaic;
     static const float _DepthFactor = 0.1;
     static const float _MinWeight = 0.001;
     static const float _ScalingMargin = 0.01;
+
 /// ENDPROPERTIES
 
 /// METHODS
@@ -74,6 +76,11 @@
     {
         float3 viewCamToFragmentWorldXYZ = (fragmentWorldXYZW - _WorldSpaceCameraPos).xyz;
         float3 sourceCamToFragmentWorldXYZ = viewCamToFragmentWorldXYZ - viewCamToSourceCamWorldXYZ;
+        if(_ConcentricMosaic == 1)
+        {
+            viewCamToFragmentWorldXYZ.y = 0;
+            sourceCamToFragmentWorldXYZ.y = 0;
+        }
         float degreeAngle = GetDegreeAngleBetweenVectors(viewCamToSourceCamWorldXYZ, viewCamToFragmentWorldXYZ);
         degreeAngle = abs(degreeAngle);
         float oppositeWeight01 = 1.0;

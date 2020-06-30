@@ -23,6 +23,7 @@ namespace COLIBRIVR.Rendering
 
         private const string _shaderNameStoredColorTexture = "_StoredColorTexture";
         private const string _shaderNameStoredDepthTexture = "_StoredDepthTexture";
+        private const string _shaderNameConcentricMosaic = "_ConcentricMosaic";
 
 #endregion //CONST_FIELDS
 
@@ -159,6 +160,7 @@ namespace COLIBRIVR.Rendering
             GeneralToolkit.CreateRenderTexture(ref _storedDepthTexture, displayResolution, 24, RenderTextureFormat.RFloat, true, FilterMode.Point, TextureWrapMode.Clamp);
 			blendingMaterial.SetTexture(_shaderNameStoredColorTexture, _storedColorTexture);
 			blendingMaterial.SetTexture(_shaderNameStoredDepthTexture, _storedDepthTexture);
+            blendingMaterial.SetInt(_shaderNameConcentricMosaic, IsConcentricMosaic(cameraSetup) ? 1 : 0);
         }
         
         /// <summary>
@@ -207,6 +209,18 @@ namespace COLIBRIVR.Rendering
             // Normalize the stored color texture's RGB channels by its alpha channel, and copy the stored depth and color textures to the camera target.
             _helperCommandBuffer.commandBuffer.Blit(tempID, BuiltinRenderTextureType.CameraTarget, blendingMaterial, 1);
             _helperCommandBuffer.commandBuffer.ReleaseTemporaryRT(tempID);
+        }
+
+        /// <summary>
+        /// Check if camera setup is that of a concentric mosaic
+        /// </summary>
+        private bool IsConcentricMosaic(in CameraSetup cameraSetup)
+        {
+            float cameraHeight = cameraSetup.cameraModels[0].transform.position.y;
+            for(int i=1; i<cameraSetup.cameraModels.Length; ++i)
+                if(cameraSetup.cameraModels[i].transform.position.y != cameraHeight)
+                    return false;
+            return true;
         }
 
 #endregion //METHODS
